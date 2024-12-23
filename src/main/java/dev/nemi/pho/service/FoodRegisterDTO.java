@@ -16,6 +16,7 @@ public class FoodRegisterDTO {
   private String description;
   private Long price;
   private Long stock;
+
   private LocalDateTime opened;
   private LocalDateTime close;
   private String registrar;

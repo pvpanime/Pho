@@ -39,16 +39,19 @@ public class FoodServiceImpl implements FoodService {
     Food food = foodRepo.findById(id).orElseThrow();
     FoodRatingGroupProjection r = foodReviewRepo.getRating(id);
     FoodViewDTO foodViewDTO = modelMapper.map(food, FoodViewDTO.class);
-    foodViewDTO.setAvgRate(r.getAvgRate());
-    foodViewDTO.setReviewCount(r.getReviewCount());
+    double avgRate = r != null ? r.getAvgRate() : 0.0;
+    long reviewCount = r != null ? r.getReviewCount() : 0L;
+    foodViewDTO.setAvgRate(avgRate);
+    foodViewDTO.setReviewCount(reviewCount);
     return foodViewDTO;
   }
 
   @Override
-  public void register(FoodRegisterDTO dto) {
+  public Long register(FoodRegisterDTO dto) {
     if (dto.getRegistrar() == null) dto.setRegistrar("hina");
     Food food = modelMapper.map(dto, Food.class);
-    foodRepo.save(food);
+    Food result = foodRepo.save(food);
+    return result.getId();
   }
 
   @Override
@@ -64,4 +67,10 @@ public class FoodServiceImpl implements FoodService {
     );
     foodRepo.save(food);
   }
+
+  @Override
+  public void delete(long id) {
+    foodRepo.deleteById(id);
+  }
+
 }

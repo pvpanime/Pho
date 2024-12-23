@@ -1,8 +1,7 @@
 package dev.nemi.pho;
 
 import dev.nemi.pho.repository.FoodRepo;
-import dev.nemi.pho.service.FoodService;
-import dev.nemi.pho.service.FoodViewDTO;
+import dev.nemi.pho.service.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,8 @@ class PhoApplicationTests {
 
   @Autowired
   private FoodService foodService;
+  @Autowired
+  private FoodReviewService foodReviewService;
 
   @Test
   public void foodSearchTest() {
@@ -47,4 +48,11 @@ class PhoApplicationTests {
     FoodViewDTO food = foodService.getOne(1L);
     log.info(food);
   }
+
+  @Test
+  public void getOneReviewTest() {
+    FoodReviewDTO review = foodReviewService.getOne(1L);
+    log.info(review);
+  }
+
 }

@@ -5,7 +5,9 @@ public interface FoodService {
 
   FoodViewDTO getOne(long id);
 
-  void register(FoodRegisterDTO dto);
+  Long register(FoodRegisterDTO dto);
 
   void edit(FoodEditDTO dto);
+
+  void delete(long id);
 }

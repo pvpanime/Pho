@@ -33,4 +33,9 @@ public class FoodReview extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Food food;
 
+  public void update(String comment, int rating) {
+    this.comment = comment;
+    this.rating = rating;
+  }
+
 }

@@ -1,9 +1,6 @@
 package dev.nemi.pho.controller;
 
-import dev.nemi.pho.service.FoodPageRequestDTO;
-import dev.nemi.pho.service.FoodViewDTO;
-import dev.nemi.pho.service.FoodService;
-import dev.nemi.pho.service.PageResponseDTO;
+import dev.nemi.pho.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
@@ -38,7 +37,11 @@ public class FoodController {
   }
 
   @GetMapping("/food/view/{id}")
-  public String view(@PathVariable long id, Model model) {
+  public String view(
+    @Valid @ModelAttribute("requestDTO") FoodPageRequestDTO requestDTO,
+    BindingResult requestBR,
+    @PathVariable long id, Model model) {
+    if (requestBR.hasErrors()) return "redirect:/food/view/"+id;
     FoodViewDTO food = foodService.getOne(id);
     model.addAttribute("food", food);
     return "food/view";
@@ -51,8 +54,23 @@ public class FoodController {
     Model model
   ) {
     if (requestBR.hasErrors()) return "redirect:/food/register";
-    model.addAttribute("pageAttr", Map.of("title", "Register", "action", "/food/register"));
+    model.addAttribute("pageAttr", Map.of("edit", false, "title", "Register", "action", "/food/register"));
     return "food/edit";
+  }
+
+  @PostMapping("/food/register")
+  public String register(
+    @Valid FoodRegisterDTO registerDTO,
+    BindingResult registerBR,
+    RedirectAttributes redirectAttributes
+  ) {
+    if (registerBR.hasErrors()) {
+      redirectAttributes.addFlashAttribute("food", registerDTO);
+      redirectAttributes.addFlashAttribute("invalid", registerBR.getAllErrors());
+      return "redirect:/food/register";
+    }
+    Long id = foodService.register(registerDTO);
+    return "redirect:/food/view/" + id;
   }
 
   @GetMapping("/food/edit/{id}")
@@ -64,7 +82,23 @@ public class FoodController {
     if (requestBR.hasErrors()) return "redirect:/food/edit/"+id;
     FoodViewDTO food = foodService.getOne(id);
     model.addAttribute("food", food);
-    model.addAttribute("pageAttr", Map.of("title", "Edit", "action", "/food/edit"));
+    model.addAttribute("pageAttr", Map.of("edit", true, "title", "Edit", "action", "/food/edit"));
     return "food/edit";
+  }
+
+  @PostMapping("/food/edit")
+  public String edit(
+    @Valid FoodEditDTO editDTO,
+    BindingResult editBR,
+    RedirectAttributes redirectAttributes,
+    FoodPageRequestDTO requestDTO
+  ) {
+    if (editBR.hasErrors()) {
+      redirectAttributes.addFlashAttribute("food", editDTO);
+      redirectAttributes.addFlashAttribute("invalid", editBR.getAllErrors());
+      return "redirect:/food/edit/" + editDTO.getId() + requestDTO.useQuery();
+    }
+    foodService.edit(editDTO);
+    return "redirect:/food/view/" + editDTO.getId() + requestDTO.useQuery() ;
   }
 }
