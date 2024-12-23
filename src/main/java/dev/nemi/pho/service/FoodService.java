@@ -1,7 +1,11 @@
 package dev.nemi.pho.service;
 
-import dev.nemi.pho.FoodPageRequestDTO;
-
 public interface FoodService {
-  PageResponseDTO<FoodIndexViewDTO> getFoods(FoodPageRequestDTO requestDTO);
+  PageResponseDTO<FoodViewDTO> getFoods(FoodPageRequestDTO requestDTO);
+
+  FoodViewDTO getOne(long id);
+
+  void register(FoodRegisterDTO dto);
+
+  void edit(FoodEditDTO dto);
 }

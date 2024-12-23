@@ -6,7 +6,7 @@ import com.querydsl.jpa.JPQLQuery;
 import dev.nemi.pho.domain.Food;
 import dev.nemi.pho.domain.QFood;
 import dev.nemi.pho.domain.QFoodReview;
-import dev.nemi.pho.service.FoodIndexViewDTO;
+import dev.nemi.pho.service.FoodViewDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,7 @@ public class FoodSearchImpl extends QuerydslRepositorySupport implements FoodSea
   public FoodSearchImpl() { super(Food.class); }
 
   @Override
-  public Page<FoodIndexViewDTO> getFoods(Pageable pageable, String searchName, Long minPrice, Long maxPrice, Integer minRate, LocalDateTime until) {
+  public Page<FoodViewDTO> getFoods(Pageable pageable, String searchName, Long minPrice, Long maxPrice, Integer minRate, LocalDateTime until) {
 
     QFood food = QFood.food;
     QFoodReview foodReview = QFoodReview.foodReview;
@@ -48,15 +48,19 @@ public class FoodSearchImpl extends QuerydslRepositorySupport implements FoodSea
 
     query.where(booleanBuilder);
 
-    JPQLQuery<FoodIndexViewDTO> bigQuery = query.select(
+    JPQLQuery<FoodViewDTO> bigQuery = query.select(
       Projections.bean(
-        FoodIndexViewDTO.class,
+        FoodViewDTO.class,
         food.id,
         food.name,
         food.description,
         food.price,
         food.stock,
+        food.opened,
         food.close,
+        food.registrar,
+        food.added,
+        food.updated,
         foodReview.count().as("reviewCount"),
         foodReview.rating.avg().as("avgRate")
       )
@@ -68,7 +72,7 @@ public class FoodSearchImpl extends QuerydslRepositorySupport implements FoodSea
 
     this.getQuerydsl().applyPagination(pageable, bigQuery);
 
-    List<FoodIndexViewDTO> list = bigQuery.fetch();
+    List<FoodViewDTO> list = bigQuery.fetch();
     long count = bigQuery.fetchCount();
 
 //    return null;

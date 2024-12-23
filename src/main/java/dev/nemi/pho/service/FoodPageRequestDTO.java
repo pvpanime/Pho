@@ -1,5 +1,6 @@
-package dev.nemi.pho;
+package dev.nemi.pho.service;
 
+import dev.nemi.pho.PageRequestDTO;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -47,7 +48,7 @@ public class FoodPageRequestDTO implements PageRequestDTO {
   private LocalDateTime until;
 
   public Pageable getPageable(String... props) {
-    return PageRequest.of(this.page - 1, this.size, Sort.by(props).descending());
+    return PageRequest.of(this.page - 1, this.size, Sort.by(props));
   }
 
   public List<Pair<String, String>> useParams(int page) {

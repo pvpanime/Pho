@@ -10,4 +10,15 @@
   <div class="jumbotron display-1 text-center py-4">
     Foods!
   </div>
+  <div class="card">
+    <div class="card-header">
+      <h1 th:text="${food.getName()}"></h1>
+    </div>
+  </div>
 </div>
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    const food = /*[[${food}]]*/ {} ;
+  console.log({ food })
+  </script>
+</th:block>

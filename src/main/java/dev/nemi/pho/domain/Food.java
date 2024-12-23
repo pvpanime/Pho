@@ -37,4 +37,15 @@ public class Food extends BaseEntity {
 
   @Column(length = 32, nullable = false)
   private String registrar;
+
+
+  public void edit(String name, String description, Long price, Long stock, LocalDateTime opened, LocalDateTime close) {
+    this.name = name;
+    this.description = description;
+    this.price = price;
+    this.stock = stock;
+    this.opened = opened;
+    this.close = close;
+  }
+
 }
