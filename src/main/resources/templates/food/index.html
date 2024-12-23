@@ -18,6 +18,57 @@
   <div class="jumbotron display-1 text-center py-4">
     Foods!
   </div>
+  <form action="/food" method="GET">
+    <div class="card my-2">
+      <div class="card-header">Search</div>
+      <div class="card-body">
+        <div class="form-floating mb-3">
+          <input class="form-control" id="searchName" name="searchName" type="text" placeholder="Name" th:value="${requestDTO.getSearchName()}">
+          <label for="searchName">Name</label>
+        </div>
+        <div class="container">
+          <div>Price</div>
+          <div class="row mb-3">
+            <div class="col">
+              <div class="form-floating">
+                <input class="form-control" id="minPrice" name="minPrice" type="number" placeholder="minPrice" th:value="${requestDTO.getMinPrice()}">
+                <label for="minPrice">Min</label>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-floating">
+                <input class="form-control" id="maxPrice" name="maxPrice" type="number" placeholder="maxPrice" th:value="${requestDTO.getMaxPrice()}">
+                <label for="maxPrice">Max</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <div class="form-floating">
+                <input class="form-control" id="minRate" name="minRate" type="number" min="1" max="5" step="1"
+                       placeholder="minRate" th:value="${requestDTO.getMinRate()}">
+                <label for="minRate">Minimum Average Rating</label>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-floating">
+                <input class="form-control" id="until" name="until" type="datetime-local" placeholder="Until" th:value="${requestDTO.getUntil()}">
+                <label for="until">Until</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="row justify-content-end">
+          <div class="col-auto ">
+            <input class="btn btn-primary" type="submit" value="Search">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
   <div class="row my-4">
     <div th:each="food : ${responseDTO.getDtoList()}" class="card col-3">
       <div class="card-body">
